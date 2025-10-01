@@ -5,21 +5,29 @@ import jakarta.validation.constraints.NotBlank;
 
 public class HospedeDTO {
 
-    @NotBlank(message = "Nome é obrigatório.")
+    private Long id;
+
     private String nome;
 
-    @NotBlank(message = "Documento é obrigatório.")
     private String documento;
 
-    @NotBlank(message = "Telefone é obrigatório.")
     private String telefone;
 
     public HospedeDTO() {}
 
     public HospedeDTO(Hospede ententy){
+        id = ententy.getId();
         nome = ententy.getNome();
         documento = ententy.getDocumento();
         telefone = ententy.getTelefone();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTelefone() {
