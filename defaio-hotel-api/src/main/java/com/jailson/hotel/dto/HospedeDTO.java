@@ -7,10 +7,13 @@ public class HospedeDTO {
 
     private Long id;
 
+    @NotBlank(message = "Nome é obrigatório.")
     private String nome;
 
+    @NotBlank(message = "Documento é obrigatório.")
     private String documento;
 
+    @NotBlank(message = "Telefone é obrigatório.")
     private String telefone;
 
     public HospedeDTO() {}

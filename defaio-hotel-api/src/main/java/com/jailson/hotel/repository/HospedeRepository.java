@@ -6,24 +6,31 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface HospedeRepository extends JpaRepository<Hospede, Long> {
     Optional<Hospede> findByDocumento(String documento);
+    List<Hospede> findByNomeContainingIgnoreCase(String nome);
+    List<Hospede> findByTelefone(String telefone);
+
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
-           update Hospede h
-              set h.nome      = :nome,
-                  h.documento = :documento,
-                  h.telefone  = :telefone
-            where h.id = :id
+           UPDATE Hospede h
+           SET h.nome      = :nome,
+                h.documento = :documento,
+                h.telefone  = :telefone
+           WHERE h.id = :id
            """)
     int updateGuest(@Param("nome") String nome,
                     @Param("documento") String documento,
                     @Param("telefone") String telefone,
                     @Param("id") Long id);
 
+    @Query("""
+           SELECT h FROM Hospede h
+           WHERE h.documento = :documento
+           """)
+    List<Hospede> selectGuestDocumento(@Param("documento") String documento);
 }
-
-
