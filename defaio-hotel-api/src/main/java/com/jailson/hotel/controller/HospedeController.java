@@ -21,14 +21,14 @@ public class HospedeController {
     }
 
     @PostMapping("/create")
-    public String createGuest( @RequestBody HospedeDTO guest) {
-        return  hospedeService.createGuest(guest);
+    public ResponseEntity<String> createGuest(@Valid @RequestBody HospedeDTO guest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(hospedeService.createGuest(guest));
     }
-
-
-    @GetMapping("/read/{id}")
-    public List<Hospede> readGuestById(@PathVariable("id") Long id) {
-        return hospedeService.readGuest(id);
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<HospedeDTO> getGuest(@PathVariable Long id) {
+        return ResponseEntity.ok(hospedeService.getGuest(id));
     }
 
     @PutMapping("/update/{id}")
