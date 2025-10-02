@@ -1,6 +1,7 @@
 package com.jailson.hotel.repository;
 
 import com.jailson.hotel.domain.Hospede;
+import com.jailson.hotel.dto.HospedeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,4 +34,11 @@ public interface HospedeRepository extends JpaRepository<Hospede, Long> {
            WHERE h.documento = :documento
            """)
     List<Hospede> selectGuestDocumento(@Param("documento") String documento);
+
+    @Query("""
+           SELECT h FROM Hospede h
+           WHERE h.id = :id
+           """)
+    List<Hospede> selectGuestId(@Param("id") Long id);
+
 }

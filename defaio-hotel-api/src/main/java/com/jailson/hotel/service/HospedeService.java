@@ -3,10 +3,15 @@ package com.jailson.hotel.service;
 import com.jailson.hotel.domain.Hospede;
 import com.jailson.hotel.dto.HospedeDTO;
 import com.jailson.hotel.repository.HospedeRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+
+import static org.apache.logging.log4j.util.Strings.trimToNull;
 
 @Service
 public class HospedeService {
@@ -21,9 +26,7 @@ public class HospedeService {
         if (guest == null) {
             return "Erro: objeto hospede inválido";
         }
-
         String validationMessage = validateGuestParameters(guest);
-
         if (!validationMessage.isEmpty()) {
             return validationMessage;
         }
@@ -36,7 +39,6 @@ public class HospedeService {
 
         guest.setTelefone(formataTelefone);
         guest.setDocumento(documentoDigits);
-
         return save(guest);
     }
 
@@ -77,7 +79,7 @@ public class HospedeService {
         entities.sort(Comparator.comparing(Hospede ::getId));
         List<Map<String, Object>> list = new ArrayList<>(entities.size());
         for (Hospede h : entities) {
-            Map<String, Object> map = new LinkedHashMap<>(4); 
+            Map<String, Object> map = new LinkedHashMap<>(4);
             map.put("id",        h.getId());
             map.put("nome",      h.getNome());
             map.put("documento", h.getDocumento());
@@ -94,29 +96,44 @@ public class HospedeService {
          return "Hóspede deletado com sucesso!";
     }
 
+    @Transactional
     public String updateGuest(HospedeDTO guest){
-        int update = hospedeRepository.updateGuest(guest.getNome(), guest.getDocumento(), guest.getTelefone(), guest.getId());
+        int update = hospedeRepository.updateGuest(
+                guest.getNome(),
+                guest.getDocumento(),
+                guest.getTelefone(),
+                guest.getId()
+        );
+
         if (update == 0) {
             return "Hóspede não encontrado para o ID: " + guest.getId();
         }
         return "Hóspede atualizado com sucesso!";
     }
 
-    public List<HospedeDTO> readGuest(HospedeDTO guest){
-        if(guest.getDocumento().isEmpty() || guest.getNome().isEmpty() || guest.getTelefone().isEmpty()){
-            return ResponseEntity.badRequest().body("Insira algum parametro para encontra a pessoa").toString();
-        }
-
-        if(!guest.getDocumento().isEmpty()){
-            return hospedeRepository.selectGuestDocumento(guest.getDocumento());
-        }
-
-        if(!guest.getNome().isEmpty()){
-            return hospedeRepository.findByNomeContainingIgnoreCase(guest.getNome());
-        }
-        if(!guest.getTelefone().isEmpty()){
-            return hospedeRepository.findByTelefone(guest.getTelefone());
+    public List<Hospede> readGuest(long id) {
+        return hospedeRepository.selectGuestId(id);
     }
 
-        return "Nenhum hóspede encontrado com os parâmetros fornecidos.";
+    public List<Hospede> search(HospedeDTO guest) {
+        if (guest == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Insira algum parâmetro para encontrar a pessoa");
+        }
+
+        if (guest.getDocumento() != null && !guest.getDocumento().isBlank()) {
+            return hospedeRepository.selectGuestDocumento(guest.getDocumento().trim());
+        }
+
+        if (guest.getNome() != null && !guest.getNome().isBlank()) {
+            return hospedeRepository.findByNomeContainingIgnoreCase(guest.getNome().trim());
+        }
+
+        if (guest.getTelefone() != null && !guest.getTelefone().isBlank()) {
+            return hospedeRepository.findByTelefone(guest.getTelefone().trim());
+        }
+
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "Insira algum parâmetro para encontrar a pessoa");
+    }
 }

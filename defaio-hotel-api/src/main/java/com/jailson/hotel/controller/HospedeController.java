@@ -3,7 +3,6 @@ package com.jailson.hotel.controller;
 import com.jailson.hotel.dto.HospedeDTO;
 import com.jailson.hotel.service.HospedeService;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,29 +20,18 @@ public class HospedeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createGuest(@Valid @RequestBody HospedeDTO guest) {
-        String result = hospedeService.createGuest(guest);
-        if (result.startsWith("Erro:") || result.startsWith("Documento") || result.startsWith("Nome") || result.startsWith("Telefone") || result.startsWith("Já existe")) {
-            return ResponseEntity.badRequest().body(result);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    public String createGuest( @RequestBody HospedeDTO guest) {
+        return  hospedeService.createGuest(guest);
     }
 
-    @GetMapping("/read")
-    public ResponseEntity<List<HospedeDTO>> readGuest(
-            @RequestParam(required = false) String documento,
-            @RequestParam(required = false) String nome,
-            @RequestParam(required = false) String telefone) {
-        List<HospedeDTO> results = hospedeService.readGuest(documento, nome, telefone);
-        if (results == null || results.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(results);
+
+    @GetMapping("/read/{id}")
+    public List<HospedeDTO> readGuestById(@PathVariable("id") Long id) {
+        return hospedeService.readGuest(id);
     }
 
-    @Transactional
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateGuest(@PathVariable("id") Long id, @Valid @RequestBody HospedeDTO guest){
+    public ResponseEntity<String> updateGuest(@PathVariable("id") Long id,@RequestBody HospedeDTO guest){
 
         if (guest.getId() != null && !guest.getId().equals(id)) {
             return ResponseEntity.badRequest().body("ID no corpo da requisição não deve ser diferente do ID na URL.");
@@ -67,6 +55,13 @@ public class HospedeController {
     public List<Map<String, Object>> listGuest() {
         return hospedeService.listGuest();
     }
+
+    @PostMapping("/search")
+    public List<HospedeDTO> search(@RequestBody HospedeDTO guest) {
+        var encontrados = hospedeService.search(guest);
+        return encontrados.stream().map(HospedeDTO::new).toList();
+    }
+
 
 
     @GetMapping("/ping")
