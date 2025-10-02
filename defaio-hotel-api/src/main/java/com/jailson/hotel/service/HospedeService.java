@@ -31,7 +31,6 @@ public class HospedeService {
             return validationMessage;
         }
 
-        // Normaliza telefone e documento para armazenar
         String telefoneDigits = guest.getTelefone().replaceAll("\\D", "");
         String formataTelefone = telefoneDigits.substring(0, 4) + "-" + telefoneDigits.substring(4);
 

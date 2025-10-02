@@ -6,10 +6,9 @@ import com.jailson.hotel.dto.CheckInDTO;
 import com.jailson.hotel.repository.CheckInRepository;
 import com.jailson.hotel.repository.HospedeRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CheckInService {
@@ -63,6 +62,62 @@ public class CheckInService {
         }
 
         return "";
+    }
+
+    public Optional<CheckInDTO> readCheckIn(Long id) {
+        return checkInRepository.findById(id).map(CheckInDTO::new);
+    }
+
+    public List<Map<String, Object>> listCheckIn() {
+        List<CheckIn> entities = checkInRepository.findAll();
+        entities.sort(Comparator.comparing(CheckIn::getId));
+
+        List<Map<String, Object>> list = new ArrayList<>(entities.size());
+        for (CheckIn h : entities) {
+            Map<String, Object> map = new LinkedHashMap<>(5);
+            map.put("id", h.getId());
+            map.put("Nome do Hospede", h.getHospede().getNome());
+            map.put("Documento do Hospede", h.getHospede().getDocumento());
+            map.put("dataEntrada", h.getDataEntrada());
+            map.put("dataSaida", h.getDataSaida());
+            list.add(map);
+        }
+        return list;
+    }
+
+
+    public List<Map<String, Object>> listGuest() {
+        List<Hospede> entities = hospedeRepository.findAll();
+        entities.sort(Comparator.comparing(Hospede ::getId));
+        List<Map<String, Object>> list = new ArrayList<>(entities.size());
+        for (Hospede h : entities) {
+            Map<String, Object> map = new LinkedHashMap<>(4);
+            map.put("id",        h.getId());
+            map.put("nome",      h.getNome());
+            map.put("documento", h.getDocumento());
+            map.put("telefone",  h.getTelefone());
+            list.add(map);
+        }
+        return list;
+    }
+
+    @Transactional
+    public String updateCheckIn(Long id, CheckInDTO checkInDTO) {
+        int updated = checkInRepository.updateCheckIn(id,
+                checkInDTO.isAdicionalVeiculo(),
+                checkInDTO.getDataEntrada(),
+                checkInDTO.getDataSaida()
+        );
+
+        if (updated == 0) {
+            return "Check-in não encontrado para o ID: " + id;
+        }
+        return "Check-in atualizado com sucesso!";
+    }
+
+    public String deleteCheckIn(Long id) {
+        checkInRepository.deleteById(id);
+        return "Check-in deletado com sucesso!";
     }
 
 }

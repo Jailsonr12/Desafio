@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/checkin")
@@ -25,22 +27,24 @@ public class CheckInController {
     }
 
     @GetMapping("/read/{id}")
-    public CheckInDTO readCheckIn(@PathVariable Long id) {
-
+    public Optional<CheckInDTO> readCheckIn(@PathVariable Long id) {
+        return checkInService.readCheckIn(id);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public String updateCheckIn(@PathVariable Long id, @RequestBody CheckInDTO checkIn) {
-
+        return checkInService.updateCheckIn(id, checkIn);
     }
 
     @DeleteMapping("/delete/{id}")
     public String deleteCheckIn(@PathVariable Long id) {
-
+        return  checkInService.deleteCheckIn(id);
     }
 
     @GetMapping("/list")
-    public List<CheckInDTO> listCheckIn() {
-
+    public List<Map<String, Object>> listCheckIn() {
+        return checkInService.listCheckIn();
     }
+
+
 }

@@ -20,8 +20,8 @@ public interface HospedeRepository extends JpaRepository<Hospede, Long> {
     @Query("""
            UPDATE Hospede h
            SET h.nome      = :nome,
-                h.documento = :documento,
-                h.telefone  = :telefone
+               h.documento = :documento,
+               h.telefone  = :telefone
            WHERE h.id = :id
            """)
     int updateGuest(@Param("nome") String nome,
