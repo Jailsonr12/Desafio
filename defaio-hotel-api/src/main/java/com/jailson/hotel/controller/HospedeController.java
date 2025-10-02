@@ -1,5 +1,6 @@
 package com.jailson.hotel.controller;
 
+import com.jailson.hotel.domain.Hospede;
 import com.jailson.hotel.dto.HospedeDTO;
 import com.jailson.hotel.service.HospedeService;
 import jakarta.transaction.Transactional;
@@ -26,7 +27,7 @@ public class HospedeController {
 
 
     @GetMapping("/read/{id}")
-    public List<HospedeDTO> readGuestById(@PathVariable("id") Long id) {
+    public List<Hospede> readGuestById(@PathVariable("id") Long id) {
         return hospedeService.readGuest(id);
     }
 
