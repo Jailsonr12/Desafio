@@ -1,8 +1,6 @@
 package com.jailson.hotel.repository;
 
 import com.jailson.hotel.domain.CheckIn;
-import jakarta.persistence.Entity;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +24,13 @@ public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
                       @Param("adicionalVeiculo") boolean adicionalVeiculo,
                       @Param("dataEntrada") LocalDateTime dataEntrada,
                       @Param("dataSaida") LocalDateTime dataSaida);
-    
+
+    @Query("""
+           SELECT c FROM CheckIn c 
+           JOIN FETCH c.hospede h 
+           WHERE c.id = :id
+           """)
+    List<CheckIn> selectCheckIn(@Param("id") Long id);
+
+
 }

@@ -64,9 +64,22 @@ public class CheckInService {
         return "";
     }
 
-    public Optional<CheckInDTO> readCheckIn(Long id) {
-        return checkInRepository.findById(id).map(CheckInDTO::new);
+    @Transactional
+    public Map<String, Object> readCheckIn(Long id) {
+        List<CheckIn> rows = checkInRepository.selectCheckIn(id);
+        CheckIn c = rows.isEmpty() ? null : rows.get(0);
+        if (c == null) return null;
+        Map<String, Object> map = new LinkedHashMap<>(5);
+        map.put("id", c.getId());
+        map.put("Nome", c.getHospede() != null ? c.getHospede().getNome() : null);
+        map.put("Documento", c.getHospede() != null ? c.getHospede().getDocumento() : null);
+        map.put("dataEntrada", c.getDataEntrada());
+        map.put("dataSaida", c.getDataSaida());
+        return map;
     }
+
+
+
 
     public List<Map<String, Object>> listCheckIn() {
         List<CheckIn> entities = checkInRepository.findAll();
@@ -76,8 +89,8 @@ public class CheckInService {
         for (CheckIn h : entities) {
             Map<String, Object> map = new LinkedHashMap<>(5);
             map.put("id", h.getId());
-            map.put("Nome do Hospede", h.getHospede().getNome());
-            map.put("Documento do Hospede", h.getHospede().getDocumento());
+            map.put("Nome", h.getHospede().getNome());
+            map.put("Documento", h.getHospede().getDocumento());
             map.put("dataEntrada", h.getDataEntrada());
             map.put("dataSaida", h.getDataSaida());
             list.add(map);
@@ -119,5 +132,4 @@ public class CheckInService {
         checkInRepository.deleteById(id);
         return "Check-in deletado com sucesso!";
     }
-
 }

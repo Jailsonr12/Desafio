@@ -1,5 +1,6 @@
 package com.jailson.hotel.controller;
 
+import com.jailson.hotel.domain.CheckIn;
 import com.jailson.hotel.dto.CheckInDTO;
 import com.jailson.hotel.service.CheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,11 @@ public class CheckInController {
     }
 
     @GetMapping("/read/{id}")
-    public Optional<CheckInDTO> readCheckIn(@PathVariable Long id) {
+    public Map<String, Object> readCheckIn(@PathVariable Long id) {
         return checkInService.readCheckIn(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public String updateCheckIn(@PathVariable Long id, @RequestBody CheckInDTO checkIn) {
         return checkInService.updateCheckIn(id, checkIn);
     }
