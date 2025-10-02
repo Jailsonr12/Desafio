@@ -21,13 +21,12 @@ public class HospedeController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createGuest(@RequestBody HospedeDTO guest) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(hospedeService.createGuest(guest));
+    public String createGuest(@RequestBody HospedeDTO guest) {
+        return hospedeService.createGuest(guest);
     }
 
     @GetMapping("/{id}")
-    public List<Hospede> getGuest(@PathVariable Long id) {
+    public List<Hospede> readGuest(@PathVariable Long id) {
         return hospedeService.readGuest(id);
     }
 
@@ -58,7 +57,7 @@ public class HospedeController {
     }
 
     @PostMapping("/search")
-    public List<HospedeDTO> search(@RequestBody HospedeDTO guest) {
+    public List<HospedeDTO> searchGuest(@RequestBody HospedeDTO guest) {
         var encontrados = hospedeService.search(guest);
         return encontrados.stream().map(HospedeDTO::new).toList();
     }

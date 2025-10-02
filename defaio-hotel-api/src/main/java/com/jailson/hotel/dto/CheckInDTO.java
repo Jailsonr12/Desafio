@@ -20,6 +20,7 @@ public class CheckInDTO {
         hospede = ententy.getHospede();
         dataEntrada = ententy.getDataEntrada();
         dataSaida = ententy.getDataSaida();
+        adicionalVeiculo = ententy.isAdicionalVeiculo();
     }
 
     public Hospede getHospede() {
@@ -35,10 +36,12 @@ public class CheckInDTO {
     }
 
     public void setDataEntrada(LocalDateTime dataEntrada) {
+
         this.dataEntrada = dataEntrada;
     }
 
     public LocalDateTime getDataSaida() {
+
         return dataSaida;
     }
 
