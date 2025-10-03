@@ -3,6 +3,7 @@ package com.jailson.hotel.service;
 import com.jailson.hotel.domain.CheckIn;
 import com.jailson.hotel.domain.Hospede;
 import com.jailson.hotel.dto.CheckInDTO;
+import com.jailson.hotel.dto.CheckInUpdateDTO;
 import com.jailson.hotel.repository.CheckInRepository;
 import com.jailson.hotel.repository.HospedeRepository;
 import jakarta.transaction.Transactional;
@@ -94,7 +95,6 @@ public class CheckInService {
 
 
 
-
     public List<Map<String, Object>> listCheckIn() {
         List<CheckIn> entities = checkInRepository.findAll();
         entities.sort(Comparator.comparing(CheckIn::getId));
@@ -113,7 +113,7 @@ public class CheckInService {
     }
 
     @Transactional
-    public String updateCheckIn(Long id, CheckInDTO checkInDTO) {
+    public String updateCheckIn(Long id, CheckInUpdateDTO checkInDTO) {
         int updated = checkInRepository.updateCheckIn(id,
                 checkInDTO.isAdicionalVeiculo(),
                 checkInDTO.getDataEntrada(),
