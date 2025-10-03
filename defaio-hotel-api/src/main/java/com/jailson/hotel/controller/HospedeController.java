@@ -62,10 +62,4 @@ public class HospedeController {
         return encontrados.stream().map(HospedeDTO::new).toList();
     }
 
-
-
-    @GetMapping("/ping")
-    public String ping() {
-        return "API Online! 🚀";
-    }
 }
