@@ -2,6 +2,7 @@ package com.jailson.hotel.controller;
 
 import com.jailson.hotel.domain.CheckIn;
 import com.jailson.hotel.dto.CheckInDTO;
+import com.jailson.hotel.dto.HospedeDTO;
 import com.jailson.hotel.service.CheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +48,19 @@ public class CheckInController {
         return checkInService.listCheckIn();
     }
 
+    @GetMapping("/search")
+    public List<Map<String, Object>> searchHospedes(@RequestParam String term) {
+        return checkInService.searchHospedesByAny(term);
+    }
+
+    @GetMapping("/open")
+    public List<Map<String, Object>> listOpenCheckIns() {
+        return checkInService.listOpenCheckIns();
+    }
+
+    @GetMapping("/closed")
+    public List<Map<String, Object>> listClosedCheckIns() {
+        return checkInService.listClosedCheckIns();
+    }
 
 }

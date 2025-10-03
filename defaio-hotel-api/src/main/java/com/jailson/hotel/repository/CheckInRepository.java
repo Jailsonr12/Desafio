@@ -1,6 +1,7 @@
 package com.jailson.hotel.repository;
 
 import com.jailson.hotel.domain.CheckIn;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,15 @@ import java.util.List;
 
 public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
 
+    @EntityGraph(attributePaths = "hospede")
+    List<CheckIn> findByHospedeId(Long hospedeId);
+
+    @EntityGraph(attributePaths = "hospede")
+    List<CheckIn> findByDataSaidaIsNotNull();
+
+    List<CheckIn> findByDataSaidaIsNull();
+
+    boolean existsByHospedeIdAndDataSaidaIsNull(Long hospedeId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
@@ -31,6 +41,9 @@ public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
            WHERE c.id = :id
            """)
     List<CheckIn> selectCheckIn(@Param("id") Long id);
+
+
+
 
 
 }

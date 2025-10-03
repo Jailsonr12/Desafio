@@ -41,4 +41,15 @@ public interface HospedeRepository extends JpaRepository<Hospede, Long> {
            """)
     List<Hospede> selectGuestId(@Param("id") Long id);
 
+    @Query("""
+           SELECT h FROM Hospede h
+           WHERE LOWER(h.nome)      
+           LIKE LOWER(concat('%', :term, '%'))
+           OR LOWER(h.documento) 
+           LIKE LOWER(concat('%', :term, '%'))
+           OR LOWER(h.telefone)  
+           LIKE LOWER(concat('%', :term, '%'))
+           """)
+    List<Hospede> searchAny(@Param("term") String term);
+
 }
