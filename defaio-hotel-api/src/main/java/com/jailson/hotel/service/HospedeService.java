@@ -2,6 +2,7 @@ package com.jailson.hotel.service;
 
 import com.jailson.hotel.domain.Hospede;
 import com.jailson.hotel.dto.HospedeDTO;
+import com.jailson.hotel.repository.CheckInRepository;
 import com.jailson.hotel.repository.HospedeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,11 @@ import static org.apache.logging.log4j.util.Strings.trimToNull;
 public class HospedeService {
 
     private final HospedeRepository hospedeRepository;
+    private final CheckInRepository checkInRepository;
 
-    public HospedeService(HospedeRepository hospedeRepository) {
+    public HospedeService(HospedeRepository hospedeRepository, CheckInRepository checkInRepository) {
         this.hospedeRepository = hospedeRepository;
+        this.checkInRepository = checkInRepository;
     }
 
     public String createGuest(HospedeDTO guest) {
@@ -89,8 +92,12 @@ public class HospedeService {
     }
 
 
-
+    @Transactional
     public String deleteGuest (Long id){
+        if (!hospedeRepository.existsById(id)) {
+            return  "Hóspede não encontrado";
+        }
+         checkInRepository.deleteByHospedeId(id);
          hospedeRepository.deleteById(id);
          return "Hóspede deletado com sucesso!";
     }

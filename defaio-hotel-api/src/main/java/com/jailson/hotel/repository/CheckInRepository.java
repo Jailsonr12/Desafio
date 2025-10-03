@@ -42,8 +42,11 @@ public interface CheckInRepository extends JpaRepository<CheckIn, Long> {
            """)
     List<CheckIn> selectCheckIn(@Param("id") Long id);
 
-
-
-
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+           DELETE FROM CheckIn c 
+           WHERE c.hospede.id = :id
+           """)
+    void  deleteByHospedeId(@Param("id") Long id);
 
 }
