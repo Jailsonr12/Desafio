@@ -1,7 +1,6 @@
 package com.jailson.hotel.repository;
 
 import com.jailson.hotel.domain.Hospede;
-import com.jailson.hotel.dto.HospedeDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

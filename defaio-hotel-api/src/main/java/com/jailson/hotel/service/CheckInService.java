@@ -107,6 +107,7 @@ public class CheckInService {
             map.put("Documento", h.getHospede().getDocumento());
             map.put("dataEntrada", h.getDataEntrada());
             map.put("dataSaida", h.getDataSaida());
+            map.put("AdicionalVeiculo", h.isAdicionalVeiculo());
             list.add(map);
         }
         return list;
