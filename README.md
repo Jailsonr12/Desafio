@@ -21,21 +21,15 @@ API REST para gestão de **hóspedes** e **check-ins** de hotel, com cálculo de
 Crie um arquivo `docker-compose.yml` (na raiz do projeto) com o conteúdo abaixo e execute:
 
 ```yaml
-version: "3.9"
 services:
   db:
     image: postgres:16
-    container_name: hotel_db
     environment:
       POSTGRES_DB: hotel
       POSTGRES_USER: hotel
       POSTGRES_PASSWORD: hotel
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-volumes:
-  pgdata: {}
 ```
 
 Suba o banco:
